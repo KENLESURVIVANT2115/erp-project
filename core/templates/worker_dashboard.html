@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Warehouse Panel{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Warehouse Panel</h2>
+
+<a href="/worker/create-shipment/" class="btn btn-primary mb-4">Create Shipment</a>
+
+<h4>Stock Levels</h4>
+<div class="card shadow p-3 mb-4">
+    <table class="table table-bordered">
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+        </tr>
+        {% for s in stocks %}
+        <tr>
+            <td>{{ s.product.name }}</td>
+            <td>{{ s.quantity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<h4>Recent Shipments</h4>
+<div class="card shadow p-3">
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+        </tr>
+        {% for ship in shipments %}
+        <tr>
+            <td>{{ ship.id }}</td>
+            <td>{{ ship.customer.name }}</td>
+            <td>{{ ship.date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

@@ -41,3 +41,51 @@ def manager_dashboard(request):
         'total_stock': sum(item.quantity for item in Stock.objects.all()),
     }
     return render(request, 'manager_dashboard.html', context)
+
+from .decorators import worker_required
+from .models import Stock, Product, Shipment, ShipmentItem, Customer
+
+@worker_required
+def worker_dashboard(request):
+    stocks = Stock.objects.select_related('product')
+    shipments = Shipment.objects.all()
+
+    return render(request, 'worker_dashboard.html', {
+        'stocks': stocks,
+        'shipments': shipments,
+    })
+
+@worker_required
+def create_shipment(request):
+    products = Product.objects.all()
+    customers = Customer.objects.all()
+
+    if request.method == 'POST':
+        customer_id = request.POST.get('customer')
+        product_id = request.POST.get('product')
+        quantity = int(request.POST.get('quantity'))
+
+        product = Product.objects.get(id=product_id)
+        customer = Customer.objects.get(id=customer_id)
+
+        # stock check
+        stock = Stock.objects.get(product=product)
+        if stock.quantity < quantity:
+            return render(request, 'shipment_error.html', {
+                'message': 'Not enough stock!'
+            })
+
+        # create shipment
+        shipment = Shipment.objects.create(customer=customer)
+        ShipmentItem.objects.create(
+            shipment=shipment,
+            product=product,
+            quantity=quantity
+        )
+
+        return redirect('worker_dashboard')
+
+    return render(request, 'create_shipment.html', {
+        'products': products,
+        'customers': customers,
+    })
