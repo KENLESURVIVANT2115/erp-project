@@ -1,45 +1,70 @@
 {% extends "base.html" %}
-
-{% block title %}Warehouse Panel{% endblock %}
-
 {% block content %}
 
-<h2 class="mb-4">Warehouse Panel</h2>
+<h2>Warehouse Panel</h2>
 
-<a href="/worker/create-shipment/" class="btn btn-primary mb-4">Create Shipment</a>
-
+<!-- STOCK TABLE -->
 <h4>Stock Levels</h4>
-<div class="card shadow p-3 mb-4">
-    <table class="table table-bordered">
-        <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-        </tr>
-        {% for s in stocks %}
-        <tr>
-            <td>{{ s.product.name }}</td>
-            <td>{{ s.quantity }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
+<table class="table table-bordered">
+    <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+    </tr>
+    {% for s in stocks %}
+    <tr>
+        <td>{{ s.product.name }}</td>
+        <td>{{ s.quantity }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
-<h4>Recent Shipments</h4>
-<div class="card shadow p-3">
-    <table class="table table-bordered">
-        <tr>
-            <th>ID</th>
-            <th>Customer</th>
-            <th>Date</th>
-        </tr>
-        {% for ship in shipments %}
-        <tr>
-            <td>{{ ship.id }}</td>
-            <td>{{ ship.customer.name }}</td>
-            <td>{{ ship.date }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
+<hr>
+
+<!-- FILTER -->
+<h4>Shipments</h4>
+<form method="get">
+    <select name="status" class="form-select w-25 d-inline">
+        <option value="">All</option>
+        <option value="PENDING" {% if status_filter == "PENDING" %}selected{% endif %}>Pending</option>
+        <option value="SENT" {% if status_filter == "SENT" %}selected{% endif %}>Sent</option>
+    </select>
+    <button class="btn btn-primary">Filter</button>
+</form>
+
+<br><br>
+
+<!-- SHIPMENTS TABLE -->
+<table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    {% for shipment in shipments %}
+    <tr>
+        <td>{{ shipment.id }}</td>
+        <td>{{ shipment.customer.name }}</td>
+        <td>
+            {% if shipment.status == 'PENDING' %}
+                <span class="badge bg-warning">Pending</span>
+            {% else %}
+                <span class="badge bg-success">Sent</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if shipment.status == 'PENDING' %}
+                <a href="{% url 'mark_shipment_sent' shipment.id %}"
+                   class="btn btn-sm btn-success">
+                   Mark as Sent
+                </a>
+            {% else %}
+                —
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 
 {% endblock %}
