@@ -1,0 +1,74 @@
+/* =====================
+   GLOBAL
+===================== */
+
+body {
+    background: #f1f5f9;
+    color: #111;
+    font-family: Arial, sans-serif;
+    transition: 0.3s;
+}
+
+/* =====================
+   SIDEBAR
+===================== */
+
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background: #1e293b;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    color: white;
+}
+
+.sidebar a {
+    color: white;
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.logout-btn {
+    margin: 20px;
+}
+
+/* =====================
+   TOP NAV
+===================== */
+
+.top-nav {
+    margin-left: 200px;
+    background: #1e293b;
+    padding: 15px 25px;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+/* =====================
+   CONTENT
+===================== */
+
+.content-area {
+    margin-left: 200px;
+    padding: 30px;
+}
+
+/* =====================
+   ANIMATIONS
+===================== */
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fad
